@@ -25,7 +25,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	if err != nil {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Register account failed 1", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -53,7 +53,6 @@ func (h *userHandler) Login(c *gin.Context) {
 	if err != nil {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
-
 		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -72,5 +71,36 @@ func (h *userHandler) Login(c *gin.Context) {
 
 	formatter := user.FormatUser(loggedinUser, "token")
 	response := helper.APIResponse("Login success", http.StatusOK, "success", formatter)
-	c.JSON(http.StatusBadRequest, response)
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
+	var input user.CheckMailInput
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	isEmailAvailable, err := h.userService.IsEmailAvailable(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": "Server error"}
+		response := helper.APIResponse("Email Already Registered", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_available": isEmailAvailable}
+	metaMessage := "Email has been registered"
+	if isEmailAvailable {
+		metaMessage = "Email is available"
+	}
+
+	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, response)
 }
