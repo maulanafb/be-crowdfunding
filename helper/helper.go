@@ -1,6 +1,11 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type Response struct {
 	Meta Meta        `json:"meta"`
@@ -29,8 +34,23 @@ func APIResponse(message string, code int, status string, data interface{}) Resp
 
 func FormatValidationError(err error) []string {
 	var errors []string
-	for _, e := range err.(validator.ValidationErrors) {
-		errors = append(errors, e.Error())
+
+	// Check if err is of type validator.ValidationErrors
+	if validationErrs, ok := err.(validator.ValidationErrors); ok {
+		// Handle the error as a validator.ValidationErrors
+		for _, e := range validationErrs {
+			errors = append(errors, e.Error())
+		}
+		return errors
 	}
+
+	// If not a validator.ValidationErrors, handle other error types
+	if jsonSyntaxErr, ok := err.(*json.SyntaxError); ok {
+		errors = append(errors, jsonSyntaxErr.Error())
+		return errors
+	}
+
+	// Handle other types of errors
+	errors = append(errors, fmt.Sprintf("Unexpected error: %v", err))
 	return errors
 }
