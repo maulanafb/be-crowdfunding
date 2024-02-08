@@ -2,6 +2,7 @@ package main
 
 import (
 	"be_crowdfunding/auth"
+	"be_crowdfunding/campaign"
 	"be_crowdfunding/handler"
 	"be_crowdfunding/helper"
 	"be_crowdfunding/user"
@@ -28,6 +29,19 @@ func main() {
 	fmt.Println("Database connected successfully")
 
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+	// campaigns, err := campaignRepository.FindAll()
+	campaigns, err := campaignRepository.FindByUserID(24)
+
+	fmt.Println(len(campaigns))
+	for _, campaign := range campaigns {
+		fmt.Println(campaign.Name)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println("Jumlah gambar")
+			fmt.Println(len(campaign.CampaignImages))
+			fmt.Println(campaign.CampaignImages[0].FileName)
+		}
+	}
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 	// fmt.Println(authService.GenerateToken(1001))

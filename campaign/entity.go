@@ -13,8 +13,10 @@ type Campaign struct {
 	GoalAmount       int
 	CurrentAmount    int
 	Slug             string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
+
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	CampaignImages []CampaignImage
 }
 
 type CampaignImage struct {
