@@ -30,8 +30,10 @@ func main() {
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
-	fmt.Println(authService.GenerateToken(1001))
-
+	// fmt.Println(authService.GenerateToken(1001))
+	// if err := migrations.Migrate(db); err != nil {
+	// 	log.Fatal(err)
+	// }
 	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
