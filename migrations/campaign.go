@@ -31,5 +31,16 @@ func Migrate(db *gorm.DB) error {
 		UpdatedAt  time.Time
 	}
 
-	return db.AutoMigrate(&Campaign{}, &CampaignImage{})
+	type Transaction struct {
+		ID         int
+		CampaignID int
+		UserID     int
+		Amount     int
+		Status     string
+		Code       string
+		CreatedAt  time.Time
+		UpdatedAt  time.Time
+	}
+
+	return db.AutoMigrate(&Transaction{})
 }
