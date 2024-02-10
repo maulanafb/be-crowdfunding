@@ -142,6 +142,8 @@ func (h *campaignHandler) UploadImage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
 	file, err := c.FormFile("file")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
@@ -149,7 +151,6 @@ func (h *campaignHandler) UploadImage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	currentUser := c.MustGet("currentUser").(user.User)
 	userID := currentUser.ID
 	currentTime := time.Now().UnixNano() / int64(time.Millisecond)
 	path := fmt.Sprintf("images/%d-%d-%s", userID, currentTime, file.Filename)
