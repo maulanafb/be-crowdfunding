@@ -4,6 +4,7 @@ import (
 	"be_crowdfunding/helper"
 	"be_crowdfunding/transaction"
 	"be_crowdfunding/user"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -56,24 +57,34 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 	var input transaction.CreateTransactionsInput
 
 	err := c.ShouldBindJSON(&input)
-
+	fmt.Println("Debug: :", err)
 	if err != nil {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Failed to create transaction", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Failed to create transactions", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+
+	// Debug print the input before processing
+	fmt.Println("Debug: Input before processing:", input)
 
 	currentUser := c.MustGet("currentUser").(user.User)
 	input.User = currentUser
+
+	// Debug print the input after setting the user
+	fmt.Println("Debug: Input after setting user:", input)
+
 	newTransaction, err := h.service.CreateTransactions(input)
 	if err != nil {
-		response := helper.APIResponse("Failed to get users transactions", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Failed to create transactions", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("success upload campaign transaction", http.StatusOK, "success", newTransaction)
-	c.JSON(http.StatusOK, response)
 
+	// Debug print the newTransaction before responding
+	fmt.Println("Debug: New transaction:", newTransaction)
+
+	response := helper.APIResponse("success create campaign transaction", http.StatusOK, "success", newTransaction)
+	c.JSON(http.StatusOK, response)
 }
