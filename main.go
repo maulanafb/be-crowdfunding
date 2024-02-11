@@ -21,6 +21,7 @@ import (
 func AutoMigrateTables(db *gorm.DB) {
 	db.AutoMigrate(&user.User{})
 }
+
 func main() {
 	dsn := "root:@tcp(127.0.0.1:3306)/golang-mysql?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -61,6 +62,7 @@ func main() {
 	api.POST("/campaign-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
 
 	api.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions)
+	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransactions)
 	router.Run()
 }
 
