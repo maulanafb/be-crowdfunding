@@ -11,7 +11,8 @@ import (
 	"github.com/midtrans/midtrans-go/snap"
 )
 
-type service struct{}
+type service struct {
+}
 
 type Service interface {
 	GetPaymentURL(transaction Transaction, user user.User) (string, error)
@@ -23,10 +24,10 @@ func NewService() *service {
 
 func (service *service) GetPaymentURL(transaction Transaction, user user.User) (string, error) {
 	// Load environment variables from .env
-	err := godotenv.Load()
-	if err != nil {
-		return "", err
-	}
+	godotenv.Load()
+	// if err != nil {
+	// 	return "", err
+	// }
 
 	// Read values from environment variables
 	serverKey := os.Getenv("MIDTRANS_SERVER_KEY")
@@ -49,12 +50,12 @@ func (service *service) GetPaymentURL(transaction Transaction, user user.User) (
 			FName: user.Name,
 		},
 	}
-
+	// fmt.Println("isi req", req)
 	// 3. Request create Snap transaction to Midtrans
-	snapResp, err := s.CreateTransaction(req)
-	if err != nil {
-		return "", err
-	}
-	fmt.Println("Response:", snapResp)
+	snapResp, _ := s.CreateTransaction(req)
+	fmt.Println("BaCA INI !!! : ", snapResp.RedirectURL)
+	// if err != nil {
+	// 	return "", err
+	// }
 	return snapResp.RedirectURL, nil
 }

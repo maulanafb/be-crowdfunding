@@ -83,7 +83,7 @@ type TransactionFormatter struct {
 	UserID     int       `json:"user_id"`
 	Amount     int       `json:"amount"`
 	Code       string    `json:"code"`
-	PaymentURL string    `json:"paymentURL"`
+	PaymentURL string    `json:"payment_url"`
 	Status     string    `json:"status"`
 	CreatedAt  time.Time `json:"created_at"`
 }
