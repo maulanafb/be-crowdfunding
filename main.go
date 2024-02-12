@@ -5,6 +5,7 @@ import (
 	"be_crowdfunding/campaign"
 	"be_crowdfunding/handler"
 	"be_crowdfunding/helper"
+	"be_crowdfunding/payment"
 	"be_crowdfunding/transaction"
 	"be_crowdfunding/user"
 	"fmt"
@@ -37,7 +38,8 @@ func main() {
 
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	authService := auth.NewService()
 	// fmt.Println(authService.GenerateToken(1001))

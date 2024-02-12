@@ -85,6 +85,6 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 	// Debug print the newTransaction before responding
 	fmt.Println("Debug: New transaction:", newTransaction)
 
-	response := helper.APIResponse("success create campaign transaction", http.StatusOK, "success", newTransaction)
+	response := helper.APIResponse("success create campaign transaction", http.StatusOK, "success", transaction.FormatTransaction(newTransaction))
 	c.JSON(http.StatusOK, response)
 }
