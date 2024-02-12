@@ -12,6 +12,22 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type CheckMailInput struct {
+type CheckEmailInput struct {
 	Email string `json:"email" binding:"required"`
+}
+
+type FormCreateUserInput struct {
+	Name       string `form:"name" binding:"required"`
+	Email      string `form:"email" binding:"required,email"`
+	Occupation string `form:"occupation" binding:"required"`
+	Password   string `form:"password" binding:"required"`
+	Error      error
+}
+
+type FormUpdateUserInput struct {
+	ID         int
+	Name       string `form:"name" binding:"required"`
+	Email      string `form:"email" binding:"required,email"`
+	Occupation string `form:"occupation" binding:"required"`
+	Error      error
 }
